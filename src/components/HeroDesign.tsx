@@ -45,27 +45,34 @@ export function HeroDesign({ html, width, height, fit = 'cover', group = false, 
 
     if (group && page && !page.querySelector('.title-group')) {
       const titleIds = new Set(['text_2', 'text_3']);
-      const testimonialIds = new Set([
-        'text_4', 'text_5', 'text_6', 'text_7', 'text_8', 'text_9', 'text_10',
-        'text_11', 'text_12', 'text_13', 'text_14', 'text_15', 'text_16', 'text_17',
-        'text_18', 'text_19', 'text_20', 'text_21', 'text_22', 'text_23', 'text_24',
-        'image_25', 'image_26', 'image_27', 'image_28', 'image_29', 'image_30', 'image_31',
-      ]);
+      // Each testimonial = adjective + name + role + star image, as its own group
+      const testimonialGroups: Array<{ className: string; ids: string[] }> = [
+        { className: 'testimonial-group testimonial-1', ids: ['text_4', 'text_19', 'text_22', 'image_31'] },
+        { className: 'testimonial-group testimonial-2', ids: ['text_5', 'text_20', 'text_24', 'image_30'] },
+        { className: 'testimonial-group testimonial-3', ids: ['text_6', 'text_21', 'text_18', 'image_29'] },
+        { className: 'testimonial-group testimonial-4', ids: ['text_7', 'text_13', 'text_17', 'image_27'] },
+        { className: 'testimonial-group testimonial-5', ids: ['text_8', 'text_11', 'text_15', 'image_25'] },
+        { className: 'testimonial-group testimonial-6', ids: ['text_9', 'text_12', 'text_16', 'image_26'] },
+        { className: 'testimonial-group testimonial-7', ids: ['text_10', 'text_14', 'text_23', 'image_28'] },
+      ];
       const pageChildren = Array.from(page.children) as HTMLElement[];
-      const moveIntoGroup = (ids: Set<string>, className: string) => {
-        const members = pageChildren.filter((child) => ids.has(child.id));
+      const moveIntoGroup = (ids: Set<string> | string[], className: string) => {
+        const idSet = ids instanceof Set ? ids : new Set(ids);
+        const members = pageChildren.filter((child) => idSet.has(child.id));
         if (members.length === 0) return;
-        const group = document.createElement('div');
-        group.className = className;
-        group.style.position = 'absolute';
-        group.style.inset = '0';
-        group.style.pointerEvents = 'none';
-        members[0].before(group);
-        members.forEach((member) => group.appendChild(member));
+        const g = document.createElement('div');
+        g.className = className;
+        g.style.position = 'absolute';
+        g.style.inset = '0';
+        g.style.pointerEvents = 'none';
+        members[0].before(g);
+        members.forEach((member) => g.appendChild(member));
       };
 
       moveIntoGroup(titleIds, 'title-group');
-      moveIntoGroup(testimonialIds, 'testimonial-group');
+      // All individual testimonial groups share the base .testimonial-group class
+      // (for the morph transform) plus a unique class for the shine effect.
+      testimonialGroups.forEach((tg) => moveIntoGroup(tg.ids, tg.className));
     }
 
     const resize = () => {

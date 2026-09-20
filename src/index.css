@@ -661,3 +661,48 @@ video { transform: translateZ(0); }
  */
 .hero-design.hide-testimonials .testimonial-group { display: none !important; }
 .hero-design.hide-title .title-group { display: none !important; }
+
+/* ================================================================== *
+ *  PER-TESTIMONIAL SHINE
+ *
+ *  Each testimonial group gets a ::after overlay that sweeps across only
+ *  when that specific group is hovered. The shine runs left-to-right once,
+ *  then resets so it can replay on the next hover.
+ * ================================================================== */
+.hero-design.desktop-image .testimonial-group {
+  pointer-events: auto;
+}
+
+.hero-design.desktop-image .testimonial-group::after {
+  content: '';
+  position: absolute;
+  inset: -40px -20px;
+  background: linear-gradient(
+    105deg,
+    transparent 35%,
+    rgba(255, 255, 255, 0.55) 48%,
+    rgba(201, 168, 76, 0.35) 50%,
+    rgba(255, 255, 255, 0.55) 52%,
+    transparent 65%
+  );
+  background-size: 250% 250%;
+  background-position: 150% 0;
+  opacity: 0;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  z-index: 100;
+}
+
+.hero-design.desktop-image .testimonial-group:hover::after {
+  opacity: 1;
+  animation: testimonial-shine 1.1s ease-in-out;
+}
+
+@keyframes testimonial-shine {
+  0%   { background-position: 150% 0; }
+  100% { background-position: -50% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-design.desktop-image .testimonial-group::after { display: none; }
+}

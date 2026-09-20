@@ -666,8 +666,9 @@ video { transform: translateZ(0); }
  *  PER-TESTIMONIAL SHINE
  *
  *  Each testimonial group gets a ::after overlay that sweeps across only
- *  when that specific group is hovered. The shine runs left-to-right once,
- *  then resets so it can replay on the next hover.
+ *  when that specific group's text is hovered.  The shine is driven by a
+ *  JS-toggled .shine-active class (not :hover) so it always restarts from
+ *  scratch and never freezes mid-animation.
  * ================================================================== */
 .hero-design.desktop-image .testimonial-group {
   pointer-events: none !important;
@@ -680,17 +681,14 @@ video { transform: translateZ(0); }
 .hero-design.desktop-image .testimonial-group::after {
   content: '';
   position: absolute;
-  left: var(--bb-x, 0);
-  top: var(--bb-y, 0);
-  width: var(--bb-w, 100%);
-  height: var(--bb-h, 100%);
+  inset: 0;
   background: linear-gradient(
     100deg,
-    transparent 30%,
-    rgba(255, 255, 255, 0.7) 45%,
-    rgba(201, 168, 76, 0.5) 50%,
-    rgba(255, 255, 255, 0.7) 55%,
-    transparent 70%
+    transparent 35%,
+    rgba(255, 255, 255, 0.45) 47%,
+    rgba(201, 168, 76, 0.28) 50%,
+    rgba(255, 255, 255, 0.45) 53%,
+    transparent 65%
   );
   background-size: 300% 100%;
   background-position: 200% 0;
@@ -700,15 +698,14 @@ video { transform: translateZ(0); }
   z-index: 100;
 }
 
-.hero-design.desktop-image .testimonial-group:hover::after {
-  opacity: 1;
-  animation: testimonial-shine 1.2s ease-in-out;
+.hero-design.desktop-image .testimonial-group.shine-active::after {
+  animation: testimonial-shine 2.2s ease-in-out;
 }
 
 @keyframes testimonial-shine {
   0%   { background-position: 200% 0; opacity: 0; }
-  10%  { opacity: 1; }
-  90%  { opacity: 1; }
+  8%   { opacity: 1; }
+  92%  { opacity: 1; }
   100% { background-position: -100% 0; opacity: 0; }
 }
 

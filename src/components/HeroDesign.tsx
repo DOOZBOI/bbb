@@ -72,17 +72,20 @@ export function HeroDesign({ html, width, height, fit = 'cover', group = false, 
       moveIntoGroup(titleIds, 'title-group');
       testimonialGroups.forEach((tg) => moveIntoGroup(tg.ids, tg.className));
 
-      // Compute each testimonial's bounding box from its children's canvas
-      // coordinates, then add a hover trigger sized to that box.  The groups
-      // themselves cover the full canvas (inset:0) so the morph transform-
-      // origin stays at the canvas centre; the trigger is the only part
-      // that actually receives pointer events.
+      // For each testimonial, compute the bounding box of just the text
+      // layers (the adjective + name + role — NOT the star image), then
+      // create a hover trigger sized to that text area only.  The trigger
+      // drives a JS-controlled shine class so the animation always restarts
+      // cleanly and never gets stuck.
       testimonialGroups.forEach((tg) => {
         const groupEl = page.querySelector(`.${tg.className.split(' ')[1]}`) as HTMLElement | null;
         if (!groupEl) return;
+
         let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
         Array.from(groupEl.children).forEach((child) => {
           const el = child as HTMLElement;
+          // Skip image layers — shine applies to text only
+          if (el.id.startsWith('image_')) return;
           const left = parseFloat(el.style.left) || 0;
           const top = parseFloat(el.style.top) || 0;
           const w = parseFloat(el.style.width) || 0;
@@ -92,19 +95,30 @@ export function HeroDesign({ html, width, height, fit = 'cover', group = false, 
           maxX = Math.max(maxX, left + w);
           maxY = Math.max(maxY, top + h);
         });
-        const pad = 40;
+        if (minX === Infinity) return;
+
+        const pad = 30;
         const bx = minX - pad;
         const by = minY - pad;
         const bw = maxX - minX + pad * 2;
         const bh = maxY - minY + pad * 2;
-        groupEl.style.setProperty('--bb-x', `${bx}px`);
-        groupEl.style.setProperty('--bb-y', `${by}px`);
-        groupEl.style.setProperty('--bb-w', `${bw}px`);
-        groupEl.style.setProperty('--bb-h', `${bh}px`);
 
         const trigger = document.createElement('div');
         trigger.className = 'shine-trigger';
         trigger.style.cssText = `position:absolute;left:${bx}px;top:${by}px;width:${bw}px;height:${bh}px;pointer-events:auto;cursor:pointer;z-index:99;`;
+
+        // JS-driven hover: toggling the class off then on forces the
+        // browser to restart the keyframe animation from scratch every
+        // time, so it never freezes mid-shine.
+        trigger.addEventListener('mouseenter', () => {
+          groupEl.classList.remove('shine-active');
+          void groupEl.offsetWidth; // force reflow → restart animation
+          groupEl.classList.add('shine-active');
+        });
+        trigger.addEventListener('mouseleave', () => {
+          groupEl.classList.remove('shine-active');
+        });
+
         groupEl.appendChild(trigger);
       });
     }

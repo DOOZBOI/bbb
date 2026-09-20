@@ -670,23 +670,30 @@ video { transform: translateZ(0); }
  *  then resets so it can replay on the next hover.
  * ================================================================== */
 .hero-design.desktop-image .testimonial-group {
-  pointer-events: auto;
+  pointer-events: none !important;
+}
+
+.hero-design.desktop-image .testimonial-group .shine-trigger {
+  pointer-events: auto !important;
 }
 
 .hero-design.desktop-image .testimonial-group::after {
   content: '';
   position: absolute;
-  inset: -40px -20px;
+  left: var(--bb-x, 0);
+  top: var(--bb-y, 0);
+  width: var(--bb-w, 100%);
+  height: var(--bb-h, 100%);
   background: linear-gradient(
-    105deg,
-    transparent 35%,
-    rgba(255, 255, 255, 0.55) 48%,
-    rgba(201, 168, 76, 0.35) 50%,
-    rgba(255, 255, 255, 0.55) 52%,
-    transparent 65%
+    100deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.7) 45%,
+    rgba(201, 168, 76, 0.5) 50%,
+    rgba(255, 255, 255, 0.7) 55%,
+    transparent 70%
   );
-  background-size: 250% 250%;
-  background-position: 150% 0;
+  background-size: 300% 100%;
+  background-position: 200% 0;
   opacity: 0;
   pointer-events: none;
   mix-blend-mode: screen;
@@ -695,12 +702,14 @@ video { transform: translateZ(0); }
 
 .hero-design.desktop-image .testimonial-group:hover::after {
   opacity: 1;
-  animation: testimonial-shine 1.1s ease-in-out;
+  animation: testimonial-shine 1.2s ease-in-out;
 }
 
 @keyframes testimonial-shine {
-  0%   { background-position: 150% 0; }
-  100% { background-position: -50% 0; }
+  0%   { background-position: 200% 0; opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { background-position: -100% 0; opacity: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {

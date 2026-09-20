@@ -297,7 +297,7 @@ function App() {
         </div>
 
         {/* Scroll indicator */}
-        <div className="hero-enter absolute bottom-4 sm:bottom-6 md:bottom-8 left-0 right-0 z-[60] flex justify-center pointer-events-none">
+        <div className="hero-enter absolute bottom-4 sm:bottom-6 md:bottom-8 left-0 right-0 z-[100] flex justify-center pointer-events-none">
           <button
             className="scroll-indicator group flex flex-col items-center gap-4 pointer-events-auto"
             onClick={() => {

@@ -103,6 +103,11 @@ export function HeroDesign({ html, width, height, fit = 'cover', group = false, 
         const bw = maxX - minX + pad * 2;
         const bh = maxY - minY + pad * 2;
 
+        groupEl.style.setProperty('--shine-x', `${bx}px`);
+        groupEl.style.setProperty('--shine-y', `${by}px`);
+        groupEl.style.setProperty('--shine-w', `${bw}px`);
+        groupEl.style.setProperty('--shine-h', `${bh}px`);
+
         const trigger = document.createElement('div');
         trigger.className = 'shine-trigger';
         trigger.style.cssText = `position:absolute;left:${bx}px;top:${by}px;width:${bw}px;height:${bh}px;pointer-events:auto;cursor:pointer;z-index:99;`;

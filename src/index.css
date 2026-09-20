@@ -681,7 +681,10 @@ video { transform: translateZ(0); }
 .hero-design.desktop-image .testimonial-group::after {
   content: '';
   position: absolute;
-  inset: 0;
+  left: var(--shine-x, 0);
+  top: var(--shine-y, 0);
+  width: var(--shine-w, 0);
+  height: var(--shine-h, 0);
   background: linear-gradient(
     100deg,
     transparent 35%,
@@ -696,6 +699,7 @@ video { transform: translateZ(0); }
   pointer-events: none;
   mix-blend-mode: screen;
   z-index: 100;
+  overflow: hidden;
 }
 
 .hero-design.desktop-image .testimonial-group.shine-active::after {
